@@ -13,7 +13,7 @@ router.get("/category/:category", async (req, res) => {
     const productByCategory = await Product.find({
       category: { $regex: new RegExp(category, "i") },
     });
-    if (!productByCategory) {
+    if (productByCategory.length === 0) {
       return res.json({
         message: "Product of this category is not available",
         success: false,

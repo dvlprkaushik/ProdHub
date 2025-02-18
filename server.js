@@ -1,9 +1,11 @@
 import express from "express";
 import { dbConnection } from "./db.js";
+import cors from "cors";
 import endPoint from "./routes/product.route.js";
 import advancedRoute from "./routes/productAdvance.route.js"
 
 const app = express();
+app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 (async () => await dbConnection())();
