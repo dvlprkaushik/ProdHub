@@ -9,7 +9,7 @@ const router = express.Router();
  */
 router.get("/all", async (req, res) => {
   try {
-    const allProducts = await Product.find();
+      const allProducts = await Product.find();
     if (allProducts.length < 1) {
       return res.json({ message: "No products found", success: false });
     }
@@ -24,25 +24,40 @@ router.get("/all", async (req, res) => {
 });
 
 /**
- * @description get product by id
+ * @description Get product by ID
  * @endpoint coolapi/product/:productid
  */
 router.get("/:productid", async (req, res) => {
   try {
     const { productid } = req.params;
-    const foundProduct = await Product.findOne({ id: parseInt(productid) });
+
+    // Convert to a number safely
+    const productIdNum = Number(productid);
+
+    // Check if productid is a valid number
+    if (isNaN(productIdNum)) {
+      return res.status(400).json({
+        message: "Invalid product ID",
+        success: false,
+      });
+    }
+
+    const foundProduct = await Product.findOne({ id: productIdNum });
+
     if (!foundProduct) {
       return res.json({ message: "Product not found", success: false });
     }
+
     res.json({
-      message: "Product found ",
+      message: "Product found",
       success: true,
       details: foundProduct,
     });
   } catch (err) {
-    res.json({ message: "Error fetching details", err, success: false });
+    res.status(500).json({ message: "Error fetching details", success: false });
   }
 });
+
 
 /**
  * @description testing post request
